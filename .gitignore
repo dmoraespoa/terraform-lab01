@@ -1,0 +1,5 @@
+modulos
+.terraform*
+.terraform.lock.hcl
+*state*
+backend.tf
