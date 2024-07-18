@@ -1,24 +1,14 @@
-resource "aws_vpc" "this" {
-    cidr_block = var.vpc_cidr
+module "vpc" {
+  source = "terraform-aws-modules/vpc/aws"
 
-  tags = {
-    Name = "vpc"
-  }
+  name            = var.vpc_name
+  cidr            = var.vpc_cidr
+  azs             = ["${var.region}a", "${var.region}b", "${var.region}c"]
+  private_subnets = var.private_subnets
+  public_subnets  = var.public_subnets
+
+  enable_nat_gateway = true
+  enable_vpn_gateway = false
+
+  tags = merge(var.tags, { "ENVIRONMENT" = "${var.env}" }, { "Name" = "${var.vpc_name}" })
 }
-
-resource "aws_subnet" "public" {
-    vpc_id = aws_vpc.this.id
-    cidr_block = "10.0.1.0/24"
-    availability_zone = "us-east-1a"
-
-  tags = {
-    Name = "public-subnet"
-  }
-}
-
-resource "aws_security_group" "custom_sg" {
-  name        = "SG tilabs"
-  description = "security Group"
-  // outras configurações do seu Security Group aqui
-}
-

@@ -1,42 +1,43 @@
-provider "aws" {
-  region = var.region
-}
-
-data "aws_ami" "ubuntu" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = ["099720109477"] # Canonical
-}
-
 module "vpc" {
   source = "./modules/vpc"
 
-  vpc_cidr = var.vpc_cidr
+  vpc_name        = "${var.env}-${var.vpc_name}"
+  vpc_cidr        = var.vpc_cidr
+  env             = var.env
+  region          = var.region
+  tags            = var.tags
+  public_subnets  = var.public_subnets
+  private_subnets = var.private_subnets
 }
 
 module "ec2" {
   source = "./modules/ec2"
 
-  ami_id        = data.aws_ami.ubuntu.id
+  name          = "${var.env}-${var.name}"
+  ami_id        = var.ami_id
   instance_type = var.instance_type
-  subnet_id     = module.vpc.public_subnet_id
   key_name      = var.key_name
-  security_group_id = var.security_group_id
+  tags          = merge(var.tags, { "Name" = "${var.name}" })
 }
 
 module "s3" {
   source = "./modules/s3"
 
   bucket_name = var.bucket_name
+  tags        = merge(var.tags, { "Name" = "${var.bucket_name}" })
 }
+
+module "sg" {
+  source = "./modules/sg"
+
+  name_sg             = "${var.env}-${var.name}"
+  description         = var.description
+  ingress_rules       = var.ingress_rules
+}
+
+
+
+
+
+
 

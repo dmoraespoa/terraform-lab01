@@ -1,7 +1,8 @@
-resource "aws_s3_bucket" "this" {
-  bucket = var.bucket_name
+module "s3_bucket" {
+  source = "terraform-aws-modules/s3-bucket/aws"
 
-  tags = {
-    Name = "s3-bucket"
-  }
+  bucket = var.bucket_name
+  acl    = "private"
+
+  tags = merge(var.tags, { "Name" = "${var.bucket_name}"})
 }
