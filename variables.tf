@@ -4,6 +4,12 @@ variable "region" {
   default     = "us-east-1"
 }
 
+variable "account" {
+  description = "account AWS"
+  type        = string
+  default     = ""
+}
+
 variable "vpc_cidr" {
   description = "Bloco cidr da VPC"
   type        = string
@@ -73,6 +79,12 @@ variable "description" {
 }
 
 variable "ingress_rules" {
-  description = "Regras de entrada"
+  description = "List of ingress rules to create by name"
+  type        = list(string)
+  default     = []
+}
+
+variable "ingress_cidr_blocks" {
+  description = "ingress_cidr_blocks"
   type        = list(string)
 }

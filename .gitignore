@@ -3,3 +3,4 @@ modulos
 .terraform.lock.hcl
 *state*
 backend.tf
+*terraform*

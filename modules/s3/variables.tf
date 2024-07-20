@@ -5,5 +5,5 @@ variable "bucket_name" {
 
 variable "tags" {
   description = "tags de identificacao s3"
-  type = map(string)
+  type        = map(string)
 }
